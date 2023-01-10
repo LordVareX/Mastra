@@ -1,0 +1,33 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "MMoInput",
+	"Description": "Easy Mobile Input Plugin for your Mobile Game (MOBA MMO RPG).",
+	"Category": "Other",
+	"CreatedBy": "dan",
+	"CreatedByURL": "https://github.com/DAN-AND-DNA/",
+	"DocsURL": "https://docs.google.com/document/d/1frhJbkHTeUasufhiYW-XXpl3ygn8_1fu3Uc2jbF9vLE/edit?usp=sharing",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/9083c3168bb944129bbae10800cfc3b5",
+	"SupportURL": "https://github.com/DAN-AND-DNA/UE4Demo_EasyMobileInput",
+	"EngineVersion": "5.0.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "MMoInput",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"IOS",
+				"Android"
+			],
+			"TargetAllowList": [
+				"Game",
+				"Editor"
+			]
+		}
+	]
+}
