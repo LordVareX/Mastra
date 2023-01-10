@@ -20,6 +20,11 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "MMoInput",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/9083c3168bb944129bbae10800cfc3b5"
 		}
 	]
 }
