@@ -118,7 +118,7 @@ bool UMMoInputDraw::DrawArrow(AActor* InActor, const FVector2D& LocalOffset, flo
 	}
 
 	FVector2D Direction2D = LocalOffset;
-	FRotator Offset(0.f, -135.0f, 0.f);
+	FRotator Offset(0.f, -90.0f, 0.f);
 
 	if (Direction2D == FVector2D::ZeroVector) {
 		Direction2D = FVector2D(InActor->GetActorRotation().Vector());
