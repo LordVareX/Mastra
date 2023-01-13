@@ -14,4 +14,8 @@ class MASTRA_API UMastraGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Character")
+		FString CharacterName;
 };

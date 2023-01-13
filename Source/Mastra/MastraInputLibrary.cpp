@@ -251,11 +251,11 @@ void UMastraInputLibrary::SetActorVisibility(AMastraCharacter* actor, TArray<AAc
 						if (pc->GetMesh()->CachedMaxDrawDistance != MaxDrawDist)
 						{
 							pc->GetMesh()->SetCullDistance(MaxDrawDist);
-							pc->Outline->SetCullDistance(MaxDrawDist);
-							if (Outer->GetClass() != pc->GetClass())
+							//pc->Outline->SetCullDistance(MaxDrawDist);
+							/*if (Outer->GetClass() != pc->GetClass())
 							{
 								pc->IsCurrentlyVisible = true;
-							}
+							}*/
 						}
 					}
 				}
@@ -282,7 +282,7 @@ void UMastraInputLibrary::SetActorVisibility(AMastraCharacter* actor, TArray<AAc
 						{
 							//if (pc->TeamName != actor->TeamName)
 							//{
-								if (Outer->GetClass() == actor->GetClass())
+								/*if (Outer->GetClass() == actor->GetClass())
 								{
 									if (actor->IsCurrentlyVisible == false)
 									{
@@ -301,7 +301,7 @@ void UMastraInputLibrary::SetActorVisibility(AMastraCharacter* actor, TArray<AAc
 										actor->Outline->SetCullDistance(MaxDrawDist);
 										actor->IsCurrentlyVisible = false;
 									}
-								}
+								}*/
 							//}
 						}
 					}

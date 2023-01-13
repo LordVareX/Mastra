@@ -127,6 +127,9 @@ struct FCharacterAttributes :public FTableRowBase
 		float HP;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
+		float MaxHP;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
 		float Mana;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
@@ -175,7 +178,10 @@ struct FCharacterDetails :public FTableRowBase
 		UTexture2D* Character_Thumbnail;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Details")
-		AActor* Character_Mesh;
+		USkeletalMesh* Character_Mesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Details")
+		TSubclassOf<UObject> Character_AnimBP;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Details")
 		FText Character_Descriptions;
@@ -186,17 +192,17 @@ struct FCharacterSkills :public FTableRowBase
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Skills")
-		bool Normal_Attack;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Skills")
+		UAnimMontage* Normal_Attack;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Skills")
-		bool Skill_1;
+		UAnimMontage* Skill_1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Skills")
-		bool Skill_2;
+		UAnimMontage* Skill_2;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Skills")
-		bool Skill_3;
+		UAnimMontage* Skill_3;
 };
 
 USTRUCT(BlueprintType)
