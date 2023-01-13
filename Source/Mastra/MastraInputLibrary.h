@@ -127,13 +127,13 @@ struct FCharacterAttributes :public FTableRowBase
 		float HP;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
-		float MaxHP;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
 		float Mana;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
 		float HP_Regen;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
+		float Mana_Regen;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character Base Stats")
 		float Physical_Attack;

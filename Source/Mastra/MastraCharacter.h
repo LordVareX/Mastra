@@ -53,6 +53,15 @@ public:
 		float HPRegen;
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float Mana;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MaxMana;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float ManaRegen;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
 		float PhysicalAttack;
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")

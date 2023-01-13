@@ -50,6 +50,9 @@ void AMastraCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AMastraCharacter, Health);
 	DOREPLIFETIME(AMastraCharacter, MaxHealth);
 	DOREPLIFETIME(AMastraCharacter, HPRegen);
+	DOREPLIFETIME(AMastraCharacter, Mana);
+	DOREPLIFETIME(AMastraCharacter, MaxMana);
+	DOREPLIFETIME(AMastraCharacter, ManaRegen);
 	DOREPLIFETIME(AMastraCharacter, PhysicalAttack);
 	DOREPLIFETIME(AMastraCharacter, MagicPower);
 	DOREPLIFETIME(AMastraCharacter, PhysicalDefense);
@@ -198,6 +201,19 @@ void AMastraCharacter::SetupStats_Implementation()
 					Health = OutRow->Character_Status[i].HP;
 					MaxHealth = OutRow->Character_Status[i].HP;
 					HPRegen = OutRow->Character_Status[i].HP_Regen;
+					Mana = OutRow->Character_Status[i].Mana;
+					MaxMana = OutRow->Character_Status[i].Mana;
+					ManaRegen = OutRow->Character_Status[i].Mana_Regen;
+					PhysicalAttack = OutRow->Character_Status[i].Physical_Attack;
+					MagicPower = OutRow->Character_Status[i].Magic_Power;
+					PhysicalDefense = OutRow->Character_Status[i].Physical_Defense;
+					MagicDefense = OutRow->Character_Status[i].Magic_Defense;
+					PhysicalPenetration = OutRow->Character_Status[i].Physical_Penetration;
+					MagicalPenetration = OutRow->Character_Status[i].Magic_Penetration;
+					DamageReduction = OutRow->Character_Status[i].Damage_Reduction;
+					AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
+					AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
+					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
 
 					GetWorldTimerManager().SetTimer(HPRegenHandle, this, &AMastraCharacter::RegenHP, 0.1f, true, 1.0f);
 				}
@@ -228,11 +244,24 @@ void AMastraCharacter::LevelIncreased()
 				{
 					MaxHealth = OutRow->Character_Status[i].HP;
 					HPRegen = OutRow->Character_Status[i].HP_Regen;
+					MaxMana = OutRow->Character_Status[i].Mana;
+					ManaRegen = OutRow->Character_Status[i].Mana_Regen;
+					PhysicalAttack = OutRow->Character_Status[i].Physical_Attack;
+					MagicPower = OutRow->Character_Status[i].Magic_Power;
+					PhysicalDefense = OutRow->Character_Status[i].Physical_Defense;
+					MagicDefense = OutRow->Character_Status[i].Magic_Defense;
+					PhysicalPenetration = OutRow->Character_Status[i].Physical_Penetration;
+					MagicalPenetration = OutRow->Character_Status[i].Magic_Penetration;
+					DamageReduction = OutRow->Character_Status[i].Damage_Reduction;
+					AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
+					AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
+					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
 				}
 			}
 		}
 	}
 }
+
 //bool AMastraCharacter::DetectNearestTarget_Validate(EResult Type, FActionSkill SelectedRow)
 //{
 //	return true;
