@@ -80,54 +80,54 @@ void AMastraPlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AMastraPlayerController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &AMastraPlayerController::OnSetDestinationReleased);
+	/*InputComponent->BindAction("SetDestination", IE_Pressed, this, &AMastraPlayerController::OnSetDestinationPressed);
+	InputComponent->BindAction("SetDestination", IE_Released, this, &AMastraPlayerController::OnSetDestinationReleased);*/
 
 	// support touch devices 
-	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AMastraPlayerController::OnTouchPressed);
-	InputComponent->BindTouch(EInputEvent::IE_Released, this, &AMastraPlayerController::OnTouchReleased);
+	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AMastraPlayerController::OnTouchPressed);
+	//InputComponent->BindTouch(EInputEvent::IE_Released, this, &AMastraPlayerController::OnTouchReleased);
 
 }
-
-void AMastraPlayerController::OnSetDestinationPressed()
-{
-	// We flag that the input is being pressed
-	bInputPressed = true;
-	// Just in case the character was moving because of a previous short press we stop it
-	StopMovement();
-}
-
-void AMastraPlayerController::OnSetDestinationReleased()
-{
-	// Player is no longer pressing the input
-	bInputPressed = false;
-
-	// If it was a short press
-	if(FollowTime <= ShortPressThreshold)
-	{
-		// We look for the location in the world where the player has pressed the input
-		FVector HitLocation = FVector::ZeroVector;
-		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
-		HitLocation = Hit.Location;
-
-		// We move there and spawn some particles
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitLocation);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
-	}
-}
-
-void AMastraPlayerController::OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	bIsTouch = true;
-	OnSetDestinationPressed();
-}
-
-void AMastraPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	bIsTouch = false;
-	OnSetDestinationReleased();
-}
+//
+//void AMastraPlayerController::OnSetDestinationPressed()
+//{
+//	// We flag that the input is being pressed
+//	bInputPressed = true;
+//	// Just in case the character was moving because of a previous short press we stop it
+//	StopMovement();
+//}
+//
+//void AMastraPlayerController::OnSetDestinationReleased()
+//{
+//	// Player is no longer pressing the input
+//	bInputPressed = false;
+//
+//	// If it was a short press
+//	if(FollowTime <= ShortPressThreshold)
+//	{
+//		// We look for the location in the world where the player has pressed the input
+//		FVector HitLocation = FVector::ZeroVector;
+//		FHitResult Hit;
+//		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+//		HitLocation = Hit.Location;
+//
+//		// We move there and spawn some particles
+//		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitLocation);
+//		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+//	}
+//}
+//
+//void AMastraPlayerController::OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location)
+//{
+//	bIsTouch = true;
+//	OnSetDestinationPressed();
+//}
+//
+//void AMastraPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
+//{
+//	bIsTouch = false;
+//	OnSetDestinationReleased();
+//}
 
 void AMastraPlayerController::AddItem(FName ItemID)
 {
