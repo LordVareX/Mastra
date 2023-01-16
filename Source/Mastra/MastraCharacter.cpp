@@ -99,6 +99,9 @@ AMastraCharacter::AMastraCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
+	SetReplicates(true);
+	SetReplicateMovement(true);
+
 }
 
 void AMastraCharacter::BeginPlay()
@@ -107,11 +110,17 @@ void AMastraCharacter::BeginPlay()
 	
 	//RefreshPlayerData();
 	ServerSetupDetails();
+	UpdateUI(Health, MaxHealth, Level);
 }
 
 void AMastraCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void AMastraCharacter::OnRep_HealthUpdated()
+{
+	UpdateUI(Health, MaxHealth, Level);
 }
 
 float AMastraCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -121,9 +130,14 @@ float AMastraCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent
 		if (DamageCauser != this)
 		{
 			Health = Health - Damage;
+			UpdateUI(Health, MaxHealth, Level);
+			if (Health <= 0)
+			{
+				this->Destroy();
+			}
 		}
 	}
-	return 0.0f;
+	return Health;
 }
 
 void AMastraCharacter::RefreshPlayerData()
@@ -216,6 +230,7 @@ void AMastraCharacter::SetupStats_Implementation()
 					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
 
 					GetWorldTimerManager().SetTimer(HPRegenHandle, this, &AMastraCharacter::RegenHP, 0.1f, true, 1.0f);
+					UpdateUI(Health, MaxHealth, Level);
 				}
 			}
 		}
@@ -225,6 +240,7 @@ void AMastraCharacter::SetupStats_Implementation()
 void AMastraCharacter::RegenHP()
 {
 	Health = FMath::Clamp(Health + HPRegen, 0.0f, MaxHealth);
+	UpdateUI(Health, MaxHealth, Level);
 }
 
 void AMastraCharacter::LevelIncreased()
@@ -256,6 +272,8 @@ void AMastraCharacter::LevelIncreased()
 					AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
 					AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
 					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
+
+					UpdateUI(Health, MaxHealth, Level);
 				}
 			}
 		}

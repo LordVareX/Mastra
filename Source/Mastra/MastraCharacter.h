@@ -43,8 +43,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
 		int Level = 1;
 
-	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_HealthUpdated, BlueprintReadWrite, Category = "Status")
 		float Health;
+
+	UFUNCTION()
+		void OnRep_HealthUpdated();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateUI(float currentHealth, float currentMaxHealth, float currentLevel);
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
 		float MaxHealth;
