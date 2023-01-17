@@ -34,7 +34,7 @@ public:
 
 public:
 
-	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
 		int Team;
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
