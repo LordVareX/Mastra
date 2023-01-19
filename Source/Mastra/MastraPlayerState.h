@@ -55,29 +55,60 @@ public:
 		int Level = 0;
 	////////////////////////////////////////////////
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float MaxHealth = 450.0f;
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float Defense = 750.0f;
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateUI(float currentHealth, float currentMaxHealth, float currentLevel);
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float BaseDamagePercent = 0.0f;
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float Health;
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float AtkSpeed = 1.0f;
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MaxHealth;
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float MoveSpeed = 1.0f;
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float HPRegen;
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float ImmunityDur = 1.0f;
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float Mana;
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float StunDuration = 1.0f;
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MaxMana;
 
-	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
-		float KnockbackVector = 0.0f;
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float ManaRegen;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float PhysicalAttack;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MagicPower;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float PhysicalDefense;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MagicDefense;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float PhysicalPenetration;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MagicalPenetration;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float DamageReduction;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float AttackSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float AttackSpeedRatio;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MovementSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float RespawnTime;
 
 	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "Status")
 		FName TeamName;

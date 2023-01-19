@@ -28,6 +28,11 @@ void ALobbyGameModeBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	//DOREPLIFETIME(ALobbyGameModeBase, CharIndex);
 }
 
+ALobbyGameModeBase::ALobbyGameModeBase()
+{
+
+}
+
 void ALobbyGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -41,7 +46,7 @@ void ALobbyGameModeBase::PostLogin(APlayerController* NewPlayer)
 	newPlayer = NewPlayer;
 
 	//set mesh array into temp array
-	Chars = CharSelections;
+	//Chars = CharSelections;
 
 	if (HasAuthority())
 	{
@@ -116,4 +121,43 @@ void ALobbyGameModeBase::StartLobbyClock() {
 			GetWorldTimerManager().SetTimer(ClockTimer, this, &ALobbyGameModeBase::StartClock, 1.0f, true);
 		}
 	}
+}
+
+void ALobbyGameModeBase::StartClock()
+{
+	if (GState != nullptr)
+	{
+		/*if (RemainingGameTime < 890.0f) {
+			GState->LobbyCheck = true;
+		}*/
+		//if (CurrentTime < EndTime)
+		//{
+		//	//Get current timer value
+		//	CurrentTime = (UInputLibrary::GetCurrentTimeInMinute()*60.0f) - InitialTimer;
+		//	//GState->LatestEvent = FString::FromInt(CurrentTime) + " seconds until the game is over";
+		//	GState->CurrentTime = CurrentTime;
+		//}
+
+		if (RemainingGameTime > 0.0f) {
+			RemainingGameTime--;
+			GState->RemainingGameTime = RemainingGameTime;
+		}
+		else
+		{
+			GState->LatestEvent = "GameEnded";
+			//Stops the timer and check for winners
+			GetWorldTimerManager().ClearTimer(ClockTimer);
+			if (GState->TeamKillA > GState->TeamKillB)
+			{
+				GState->Winner = "Radiant";
+				//MatchResult("Radiant");
+			}
+			else if (GState->TeamKillB > GState->TeamKillA)
+			{
+				GState->Winner = "Dire";
+				//MatchResult("Dire");
+			}
+		}
+	}
+
 }

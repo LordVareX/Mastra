@@ -38,6 +38,9 @@ public:
 		int Team;
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		FString PickedCharacter;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
 		FName PlayerName;
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
@@ -50,10 +53,13 @@ public:
 		void OnRep_HealthUpdated();
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void UpdateUI(float currentHealth, float currentMaxHealth, float currentLevel);
+		void UpdateUI(float currentHealth);//, float currentMaxHealth, float currentLevel);
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
 		float MaxHealth;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
+		float MaxHP;
 
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite, Category = "Status")
 		float HPRegen;
@@ -127,22 +133,36 @@ protected:
 		void FinishSetupBeginPlay();
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
-		void ServerSetupStats();
+		void ServerSetupStats(const FString& CharacterName);
 
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
-		void SetupStats();
+		void SetupStats(const FString& CharacterName);
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
-		void ServerSetupDetails();
+		void ServerSetupDetails(const FString& CharacterName);
 
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
-		void SetupDetails();
+		void SetupDetails(const FString& CharacterName);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+		void ServerLocked(const FString& CharacterName);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
+		void Locked(const FString& CharacterName);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+		void ServerLevelIncreased(const FString& CharacterName);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
+		void LevelIncreased(const FString& CharacterName);
+
+	UFUNCTION()
+		void RegenHP();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateStats(float currMaxHealth, int32 currLevel);
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
-	
-
-
 
 public:
 
@@ -152,11 +172,7 @@ public:
 	UPROPERTY()
 		FTimerHandle HPRegenHandle;
 
-	UFUNCTION()
-		void RegenHP();
 
-	UFUNCTION(BlueprintCallable)
-		void LevelIncreased();
 
 };
 

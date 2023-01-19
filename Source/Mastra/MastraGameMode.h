@@ -117,16 +117,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item System")
 		class UItemData* ItemDatabase;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Clock")
+		float RemainingGameTime;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Clock")
+		float LobbyTimer;
+
 private:
 
 	//Initial honor val per kill
 	const int HonorKill = 200;
 
-	UPROPERTY()
-		float RemainingGameTime;
 
-	UPROPERTY()
-		float LobbyTimer;
 
 };
 

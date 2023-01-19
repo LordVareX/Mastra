@@ -45,10 +45,12 @@ void AMastraCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AMastraCharacter, Team);
+	DOREPLIFETIME(AMastraCharacter, PickedCharacter);
 	DOREPLIFETIME(AMastraCharacter, PlayerName);
 	DOREPLIFETIME(AMastraCharacter, Level);
 	DOREPLIFETIME(AMastraCharacter, Health);
 	DOREPLIFETIME(AMastraCharacter, MaxHealth);
+	DOREPLIFETIME(AMastraCharacter, MaxHP);
 	DOREPLIFETIME(AMastraCharacter, HPRegen);
 	DOREPLIFETIME(AMastraCharacter, Mana);
 	DOREPLIFETIME(AMastraCharacter, MaxMana);
@@ -102,15 +104,17 @@ AMastraCharacter::AMastraCharacter()
 	SetReplicates(true);
 	SetReplicateMovement(true);
 
+	MaxHP = MaxHealth;
 }
 
 void AMastraCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+
 	//RefreshPlayerData();
-	ServerSetupDetails();
-	UpdateUI(Health, MaxHealth, Level);
+	//ServerSetupDetails();
+	//UpdateUI(Health, MaxHealth, Level);
 }
 
 void AMastraCharacter::Tick(float DeltaSeconds)
@@ -120,7 +124,11 @@ void AMastraCharacter::Tick(float DeltaSeconds)
 
 void AMastraCharacter::OnRep_HealthUpdated()
 {
-	UpdateUI(Health, MaxHealth, Level);
+	AMastraPlayerState* PS = Cast<AMastraPlayerState>(GetPlayerState());
+	if (PS)
+	{
+		UpdateUI(Health);
+	}
 }
 
 float AMastraCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -130,7 +138,7 @@ float AMastraCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent
 		if (DamageCauser != this)
 		{
 			Health = Health - Damage;
-			UpdateUI(Health, MaxHealth, Level);
+			//UpdateUI(Health);
 			if (Health <= 0)
 			{
 				this->Destroy();
@@ -144,66 +152,91 @@ void AMastraCharacter::RefreshPlayerData()
 {
 	if (IsLocallyControlled())
 	{
-		ServerSetupDetails();
+		//ServerSetupDetails();
 	}
 }
 
-bool AMastraCharacter::ServerSetupDetails_Validate()
+bool AMastraCharacter::ServerLocked_Validate(const FString& CharacterName)
 {
 	return true;
 }
 
-void AMastraCharacter::ServerSetupDetails_Implementation()
+void AMastraCharacter::ServerLocked_Implementation(const FString& CharacterName)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, FString::Printf(TEXT("SERVERSETUPSTATS")));
-	SetupDetails();
+	Locked(CharacterName);
 }
 
-bool AMastraCharacter::SetupDetails_Validate()
+bool AMastraCharacter::Locked_Validate(const FString& CharacterName)
 {
 	return true;
 }
 
-void AMastraCharacter::SetupDetails_Implementation()
+void AMastraCharacter::Locked_Implementation(const FString& CharacterName)
+{
+	ServerSetupDetails(CharacterName);
+	PickedCharacter = CharacterName;
+	//UpdateUI(Health, MaxHealth, Level);
+}
+
+bool AMastraCharacter::ServerSetupDetails_Validate(const FString& CharacterName)
+{
+	return true;
+}
+
+void AMastraCharacter::ServerSetupDetails_Implementation(const FString& CharacterName)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, FString::Printf(TEXT("SERVERSETUPSTATS")));
+	SetupDetails(CharacterName);
+}
+
+bool AMastraCharacter::SetupDetails_Validate(const FString& CharacterName)
+{
+	return true;
+}
+
+void AMastraCharacter::SetupDetails_Implementation(const FString& CharacterName)
 {
 	GI = Cast<UMastraGameInstance>(UGameplayStatics::GetGameInstance(this));
 
 	if (GI != nullptr)
 	{
-		FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*GI->CharacterName), "");
+		FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*CharacterName), "");//(FName(*GI->CharacterName), "");
 		if (OutRow)
 		{
 			this->GetMesh()->SetSkeletalMesh(OutRow->Character_Details.Character_Mesh);
 			this->GetMesh()->SetAnimInstanceClass(OutRow->Character_Details.Character_AnimBP);
 			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("Assigned")));
-			ServerSetupStats();
+			ServerSetupStats(CharacterName);
 		}
 	}
 }
 
-bool AMastraCharacter::ServerSetupStats_Validate()
+bool AMastraCharacter::ServerSetupStats_Validate(const FString& CharacterName)
 {
 	return true;
 }
 
-void AMastraCharacter::ServerSetupStats_Implementation()
+void AMastraCharacter::ServerSetupStats_Implementation(const FString& CharacterName)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, FString::Printf(TEXT("SERVERSETUPSTATS")));
-	SetupStats();
+	SetupStats(CharacterName);
+
+	
 }
 
-bool AMastraCharacter::SetupStats_Validate()
+bool AMastraCharacter::SetupStats_Validate(const FString& CharacterName)
 {
 	return true;
 }
 
-void AMastraCharacter::SetupStats_Implementation()
+void AMastraCharacter::SetupStats_Implementation(const FString& CharacterName)
 {
-	GI = Cast<UMastraGameInstance>(UGameplayStatics::GetGameInstance(this));
+	AMastraPlayerState* PS = Cast<AMastraPlayerState>(GetPlayerState());
 
-	if (GI != nullptr)
+	if (PS)
 	{
-		FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*GI->CharacterName), "");
+		FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*CharacterName), "");
 		if (OutRow)
 		{
 			for (int i = 0; i < OutRow->Character_Status.Num(); ++i)
@@ -228,56 +261,93 @@ void AMastraCharacter::SetupStats_Implementation()
 					AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
 					AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
 					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
+					
+					//RegenHP();
+					UpdateUI(Health);
+					//RegenHealth(MaxHealth);
+					UpdateStats(MaxHealth, Level);
 
-					GetWorldTimerManager().SetTimer(HPRegenHandle, this, &AMastraCharacter::RegenHP, 0.1f, true, 1.0f);
-					UpdateUI(Health, MaxHealth, Level);
+					GetWorldTimerManager().SetTimer(HPRegenHandle, this, &AMastraCharacter::RegenHP, 0.1f, true, 0.1f);
+					//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("Health : %f"), Health));
+					
 				}
 			}
 		}
 	}
 }
+
+
+bool AMastraCharacter::ServerLevelIncreased_Validate(const FString& CharacterName)
+{
+	return true;
+}
+
+void AMastraCharacter::ServerLevelIncreased_Implementation(const FString& CharacterName)
+{
+
+	LevelIncreased(CharacterName);
+	
+}
+
+bool AMastraCharacter::LevelIncreased_Validate(const FString& CharacterName)
+{
+	return true;
+}
+
+void AMastraCharacter::LevelIncreased_Implementation(const FString& CharacterName)
+{
+		AMastraPlayerState* PS = Cast<AMastraPlayerState>(GetPlayerState());
+
+		if (PS)
+		{
+			FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*CharacterName), "");
+			if (OutRow)
+			{
+				for (int i = 0; i < OutRow->Character_Status.Num(); ++i)
+				{
+					OutRow->Character_Status[i];
+
+					if (OutRow->Character_Status[i].Level == Level)
+					{
+						MaxHealth = OutRow->Character_Status[i].HP;
+						HPRegen = OutRow->Character_Status[i].HP_Regen;
+						MaxMana = OutRow->Character_Status[i].Mana;
+						ManaRegen = OutRow->Character_Status[i].Mana_Regen;
+						PhysicalAttack = OutRow->Character_Status[i].Physical_Attack;
+						MagicPower = OutRow->Character_Status[i].Magic_Power;
+						PhysicalDefense = OutRow->Character_Status[i].Physical_Defense;
+						MagicDefense = OutRow->Character_Status[i].Magic_Defense;
+						PhysicalPenetration = OutRow->Character_Status[i].Physical_Penetration;
+						MagicalPenetration = OutRow->Character_Status[i].Magic_Penetration;
+						DamageReduction = OutRow->Character_Status[i].Damage_Reduction;
+						AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
+						AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
+						MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
+						//RegenHP();
+						UpdateStats(MaxHealth, Level);
+						
+		
+
+						//UpdateUI(Health);
+						GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("Health : %f"), MaxHealth));
+						
+					}
+				}
+			}
+		}
+	
+}
+
+
+
 
 void AMastraCharacter::RegenHP()
 {
-	Health = FMath::Clamp(Health + HPRegen, 0.0f, MaxHealth);
-	UpdateUI(Health, MaxHealth, Level);
-}
-
-void AMastraCharacter::LevelIncreased()
-{
-	GI = Cast<UMastraGameInstance>(UGameplayStatics::GetGameInstance(this));
-
-	if (GI != nullptr)
-	{
-		FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*GI->CharacterName), "");
-		if (OutRow)
-		{
-			for (int i = 0; i < OutRow->Character_Status.Num(); ++i)
-			{
-				OutRow->Character_Status[i];
-
-				if (OutRow->Character_Status[i].Level == Level)
-				{
-					MaxHealth = OutRow->Character_Status[i].HP;
-					HPRegen = OutRow->Character_Status[i].HP_Regen;
-					MaxMana = OutRow->Character_Status[i].Mana;
-					ManaRegen = OutRow->Character_Status[i].Mana_Regen;
-					PhysicalAttack = OutRow->Character_Status[i].Physical_Attack;
-					MagicPower = OutRow->Character_Status[i].Magic_Power;
-					PhysicalDefense = OutRow->Character_Status[i].Physical_Defense;
-					MagicDefense = OutRow->Character_Status[i].Magic_Defense;
-					PhysicalPenetration = OutRow->Character_Status[i].Physical_Penetration;
-					MagicalPenetration = OutRow->Character_Status[i].Magic_Penetration;
-					DamageReduction = OutRow->Character_Status[i].Damage_Reduction;
-					AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
-					AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
-					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
-
-					UpdateUI(Health, MaxHealth, Level);
-				}
-			}
-		}
-	}
+	//if (this->GetLocalRole() == ROLE_Authority)
+	//{
+		Health = FMath::Clamp(Health + HPRegen, 0.0f, MaxHealth);
+	//}
+	
 }
 
 //bool AMastraCharacter::DetectNearestTarget_Validate(EResult Type, FActionSkill SelectedRow)

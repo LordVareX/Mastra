@@ -34,21 +34,24 @@ void AMastraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(AMastraPlayerState, TeamRef);
 	DOREPLIFETIME(AMastraPlayerState, RespawnTimeCounter);
 	DOREPLIFETIME(AMastraPlayerState, InitRespawnTime);
-	DOREPLIFETIME(AMastraPlayerState, RespawnHandle);
+	DOREPLIFETIME(AMastraPlayerState, Level);
+	DOREPLIFETIME(AMastraPlayerState, Health);
 	DOREPLIFETIME(AMastraPlayerState, MaxHealth);
-	DOREPLIFETIME(AMastraPlayerState, Defense);
-	DOREPLIFETIME(AMastraPlayerState, BaseDamagePercent);
-	DOREPLIFETIME(AMastraPlayerState, StyleName);
-	DOREPLIFETIME(AMastraPlayerState, FrontHitMoveset);
-	DOREPLIFETIME(AMastraPlayerState, BackHitMoveset);
-	DOREPLIFETIME(AMastraPlayerState, RightHitMoveset);
-	DOREPLIFETIME(AMastraPlayerState, LeftHitMoveset);
-	DOREPLIFETIME(AMastraPlayerState, SkillComponent);
-	DOREPLIFETIME(AMastraPlayerState, AtkSpeed);
-	DOREPLIFETIME(AMastraPlayerState, MoveSpeed);
-	DOREPLIFETIME(AMastraPlayerState, ImmunityDur);
-	DOREPLIFETIME(AMastraPlayerState, StunDuration);
-	DOREPLIFETIME(AMastraPlayerState, KnockbackVector);
+	DOREPLIFETIME(AMastraPlayerState, HPRegen);
+	DOREPLIFETIME(AMastraPlayerState, Mana);
+	DOREPLIFETIME(AMastraPlayerState, MaxMana);
+	DOREPLIFETIME(AMastraPlayerState, ManaRegen);
+	DOREPLIFETIME(AMastraPlayerState, PhysicalAttack);
+	DOREPLIFETIME(AMastraPlayerState, MagicPower);
+	DOREPLIFETIME(AMastraPlayerState, PhysicalDefense);
+	DOREPLIFETIME(AMastraPlayerState, MagicDefense);
+	DOREPLIFETIME(AMastraPlayerState, PhysicalPenetration);
+	DOREPLIFETIME(AMastraPlayerState, MagicalPenetration);
+	DOREPLIFETIME(AMastraPlayerState, DamageReduction);
+	DOREPLIFETIME(AMastraPlayerState, AttackSpeed);
+	DOREPLIFETIME(AMastraPlayerState, AttackSpeedRatio);
+	DOREPLIFETIME(AMastraPlayerState, MovementSpeed);
+	DOREPLIFETIME(AMastraPlayerState, RespawnTime);
 
 }
 
@@ -170,67 +173,67 @@ void AMastraPlayerState::ClientSetExp_Implementation(int EXPoint)
 void AMastraPlayerState::AddExp(int EXPoint, int& OutLevel)
 {
 	//Get last row of datatable
-	FName lastRowName = LevelTable->GetRowNames()[LevelTable->GetRowNames().Num() - 1];
-	FCharacterAttributes* lastRow = LevelTable->FindRow<FCharacterAttributes>(lastRowName, FString());
+	//FName lastRowName = LevelTable->GetRowNames()[LevelTable->GetRowNames().Num() - 1];
+	//FCharacterAttributes* lastRow = LevelTable->FindRow<FCharacterAttributes>(lastRowName, FString());
 
-	Exp = FMath::Clamp(Exp + EXPoint, 0, lastRow->MinExpPerLevel);
+	//Exp = FMath::Clamp(Exp + EXPoint, 0, lastRow->MinExpPerLevel);
 
-	//if enough exp, level up
-	if (Exp >= ExpNeeded)
-	{
-		//Level++;
+	////if enough exp, level up
+	//if (Exp >= ExpNeeded)
+	//{
+	//	//Level++;
 
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("Exp : %d"), EXPoint));
+	//	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("Exp : %d"), EXPoint));
 
-		Level = FMath::Clamp(Level + 1, 1, lastRow->Level);
-		/*Level++;*/
+	//	Level = FMath::Clamp(Level + 1, 1, lastRow->Level);
+	//	/*Level++;*/
 
-		//Set the remainder exp from prev level to current exp of current level
-		//Exp = Exp - ExpNeeded;
+	//	//Set the remainder exp from prev level to current exp of current level
+	//	//Exp = Exp - ExpNeeded;
 
-		//Get new row of datatable
-		if (LevelTable->GetRowNames().IsValidIndex(Level))
-		{
-			FName newRowName = LevelTable->GetRowNames()[Level];
-			FCharacterAttributes* newRow = LevelTable->FindRow<FCharacterAttributes>(newRowName, FString());
+	//	//Get new row of datatable
+	//	if (LevelTable->GetRowNames().IsValidIndex(Level))
+	//	{
+	//		FName newRowName = LevelTable->GetRowNames()[Level];
+	//		FCharacterAttributes* newRow = LevelTable->FindRow<FCharacterAttributes>(newRowName, FString());
 
-			if (newRow)
-			{
-				//to clamp exp value needed for each level
-				ExpNeeded = newRow->MinExpPerLevel;
-				GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("ExpNeeded : %d"), ExpNeeded));
+	//		if (newRow)
+	//		{
+	//			//to clamp exp value needed for each level
+	//			ExpNeeded = newRow->MinExpPerLevel;
+	//			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("ExpNeeded : %d"), ExpNeeded));
 
-				//Adjust base stats
-				FName curRowName = LevelTable->GetRowNames()[Level - 1];
-				FCharacterAttributes* Row = LevelTable->FindRow<FCharacterAttributes>(curRowName, FString());
-				if (Row)
-				{
-					MaxHealth = UMastraInputLibrary::ChangeValueByPercentage(MaxHealth, Row->HP, true);
-					Defense = UMastraInputLibrary::ChangeValueByPercentage(Defense, Row->Physical_Defense, true);
-					BaseDamagePercent = Row->Physical_Attack;
-					if (GetPawn()->IsLocallyControlled())
-					{
-						ServerSetRespawnTime(Row->Respawn_Time);
-					}
-					/*RespawnTimeCounter = Row->RespawnTime;
-					OnRep_Timer();
+	//			//Adjust base stats
+	//			FName curRowName = LevelTable->GetRowNames()[Level - 1];
+	//			FCharacterAttributes* Row = LevelTable->FindRow<FCharacterAttributes>(curRowName, FString());
+	//			if (Row)
+	//			{
+	//				MaxHealth = UMastraInputLibrary::ChangeValueByPercentage(MaxHealth, Row->HP, true);
+	//				Defense = UMastraInputLibrary::ChangeValueByPercentage(Defense, Row->Physical_Defense, true);
+	//				BaseDamagePercent = Row->Physical_Attack;
+	//				if (GetPawn()->IsLocallyControlled())
+	//				{
+	//					ServerSetRespawnTime(Row->Respawn_Time);
+	//				}
+	//				/*RespawnTimeCounter = Row->RespawnTime;
+	//				OnRep_Timer();
 
-					InitRespawnTime = RespawnTimeCounter;
-					OnRep_InitTimer();*/
+	//				InitRespawnTime = RespawnTimeCounter;
+	//				OnRep_InitTimer();*/
 
-					/*Row->SkillUnlock;*/
+	//				/*Row->SkillUnlock;*/
 
-					if (GetPawn()->GetClass()->ImplementsInterface(UMastraInterface::StaticClass()))
-					{
-						Cast<IMastraInterface>(GetPawn())->ActivatePure(MaxHealth, Defense, MoveSpeed, AtkSpeed, StunDuration, KnockbackVector, ImmunityDur);
-					}
-				}
-			}
-		}
+	//				if (GetPawn()->GetClass()->ImplementsInterface(UMastraInterface::StaticClass()))
+	//				{
+	//					Cast<IMastraInterface>(GetPawn())->ActivatePure(MaxHealth, Defense, MoveSpeed, AtkSpeed, StunDuration, KnockbackVector, ImmunityDur);
+	//				}
+	//			}
+	//		}
+	//	}
 
-		//return level
-		OutLevel = Level;
-	}
+	//	//return level
+	//	OutLevel = Level;
+	//}
 }
 
 bool AMastraPlayerState::ClientSetRespawnTime_Validate(float time)
