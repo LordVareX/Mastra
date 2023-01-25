@@ -18,7 +18,7 @@ class MASTRA_API AMastraGameState : public AGameStateBase
 		void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	UPROPERTY(Replicated)
+	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite)
 		FString LatestEvent;
 
 	UPROPERTY(Replicated)

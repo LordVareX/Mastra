@@ -30,7 +30,7 @@ void AMastraGameMode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 AMastraGameMode::AMastraGameMode()
 {
-	LobbyTimer = 10.0f;
+	//LobbyTimer = 10.0f;
 	//// use our custom PlayerController class
 	//PlayerControllerClass = AMastraPlayerController::StaticClass();
 
