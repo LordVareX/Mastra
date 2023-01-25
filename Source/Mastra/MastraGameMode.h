@@ -65,6 +65,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NewPlayer")
 		APlayerController* newPlayer;
 
+	//virtual AActor* FindPlayerStart_Implementation(AController* Player, FString IncomingName) override;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -78,7 +80,7 @@ protected:
 		void StartLobbyClock();
 
 	UFUNCTION(BlueprintCallable)
-		void SpawnBasedOnTeam(FName TeamName, USkeletalMesh* CharMesh);
+		void SpawnBasedOnTeam(FName TeamName);//(FName TeamName, USkeletalMesh* CharMesh);
 
 	TArray<USkeletalMesh*> Chars;
 

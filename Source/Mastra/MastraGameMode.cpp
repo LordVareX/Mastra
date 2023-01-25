@@ -30,7 +30,7 @@ void AMastraGameMode::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 AMastraGameMode::AMastraGameMode()
 {
-	LobbyTimer = 60.0f;
+	LobbyTimer = 10.0f;
 	//// use our custom PlayerController class
 	//PlayerControllerClass = AMastraPlayerController::StaticClass();
 
@@ -53,78 +53,104 @@ void AMastraGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	LobbyTimer = 10.0f;
+
 }
+
+//AActor* AMastraGameMode::FIndPlayerStart_Implementation(AController* Player, )
+//{
+//	AMastraPlayerState* PS = Cast <AMastraPlayerState>(Player->PlayerState);
+//	if (PS)
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("Player"));
+//		for (TActorIterator<APlayerStart> It(GetWorld()); It; ++It)
+//		{
+//			APlayerStart* currentPlayerStart = *It;
+//			if (currentPlayerStart->PlayerStartTag == FName(*FString::FromInt(PS->Pi)))
+//			{
+//				//currentPlayerStart->PlayerStartTag = "Taken";
+//				return currentPlayerStart;
+//			}
+//		}
+//	}
+//	return nullptr;
+//}
 
 void AMastraGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	newPlayer = NewPlayer;
+	//newPlayer = NewPlayer;
 
-	//set mesh array into temp array
-	Chars = CharSelections;
+	////set mesh array into temp array
+	//Chars = CharSelections;
 
-	if (HasAuthority())
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Player Added : %s"), *newPlayer->GetFName().ToString()));
+	//if (HasAuthority())
+	//{
+	//	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, FString::Printf(TEXT("Player Added : %s"), *newPlayer->GetFName().ToString()));
 
-		//newPlayer = NewPlayer;
-		AMastraPlayerController* MobaPC = Cast<AMastraPlayerController>(newPlayer);
+	//	//newPlayer = NewPlayer;
+	//	AMastraPlayerController* MobaPC = Cast<AMastraPlayerController>(newPlayer);
 
-		if (MobaPC)
-		{
-			Players.Add(MobaPC);
+	//	if (MobaPC)
+	//	{
+	//		Players.Add(MobaPC);
 
-			//AMastraPlayerState* PS = Cast <AMastraPlayerState>(MobaPC->PlayerState);
-			//if (PS)
-			//{
-				//GState = Cast<AMastraGameState>(UGameplayStatics::GetGameState(this));
-				//if (GState)
-				//{
-				//	PS->Pi = Players.Num() - 1;
-				//	if ((PS->Pi) < 4)
-				//	{
-				//		GState->TeamA.Add(PS->GetPlayerName());
-				//		SpawnBasedOnTeam("Radiant", CharSelections[CharIndex]);
-				//		//UpdateLobby();
-				//	}
-				//	else
-				//	{
-				//		GState->TeamB.Add(PS->GetPlayerName());
-				//		SpawnBasedOnTeam("Dire", CharSelections[CharIndex]);
+	//		AMastraPlayerState* PS = Cast <AMastraPlayerState>(MobaPC->PlayerState);
+	//		if (PS)
+	//		{
+	//			GState = Cast<AMastraGameState>(UGameplayStatics::GetGameState(this));
+	//			if (GState)
+	//			{
+	//				PS->Pi = Players.Num() - 1;
+	//				GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Player Index : %d"), Players.Num() - 1));
+	//				//for (int i = 0; i < PS->Pi; i = i + 2)
+	//				//{
+	//					if ((PS->Pi) < 4)
+	//					{
+	//						GState->TeamA.Add(PS->GetPlayerName());
+	//						SpawnBasedOnTeam("Radiant");
+	//						//UpdateLobby();
+	//					}
+	//					else
+	//					{
+	//						GState->TeamB.Add(PS->GetPlayerName());
+	//						SpawnBasedOnTeam("Dire");
 
-				//	}
-				//	UpdateLobby();
-				//	Random unique number for character mesh array
-				//	if (Chars.Num() > 0)
-				//	{
-				//		CharIndex = FMath::RandRange(0, Chars.Num() - 1);
-				//		//PS->CharMesh = Chars[CharIndex];
-				//		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Player Index : %d"), Players.Num() - 1));
-				//		if ((PS->Pi) < 4)
-				//		{
-				//			GState->TeamA.Add(PS->GetPlayerName());
-				//			SpawnBasedOnTeam("Radiant", CharSelections[CharIndex]);
-				//		}
-				//		else
-				//		{
-				//			GState->TeamB.Add(PS->GetPlayerName());
-				//			SpawnBasedOnTeam("Dire", CharSelections[CharIndex]);
-				//		}
-				//		Chars.RemoveAtSwap(CharIndex);
-				//	}
-				//}
-			
-			if (Players.Num() > 0)
-			{
-				GetWorldTimerManager().SetTimer(LobbyClockTimer, this, &AMastraGameMode::StartLobbyClock, 1.0f, true, 1.0f);
-				//UpdateLobby();
-			}
-		}
-	}
+	//					}
+	//					UpdateLobby();
+	//					//Random unique number for character mesh array
+	//					//if (Chars.Num() > 0)
+	//					//{
+	//					//	CharIndex = FMath::RandRange(0, Chars.Num() - 1);
+	//					//	//PS->CharMesh = Chars[CharIndex];
+	//					//	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Player Index : %d"), Players.Num() - 1));
+	//					//	if ((PS->Pi) < 4)
+	//					//	{
+	//					//		GState->TeamA.Add(PS->GetPlayerName());
+	//					//		SpawnBasedOnTeam("Radiant", CharSelections[CharIndex]);
+	//					//	}
+	//					//	else
+	//					//	{
+	//					//		GState->TeamB.Add(PS->GetPlayerName());
+	//					//		SpawnBasedOnTeam("Dire", CharSelections[CharIndex]);
+	//					//	}
+	//					//	Chars.RemoveAtSwap(CharIndex);
+	//					//}
+	//				//}
+	//			}
+	//		}
+	//		
+	//		if (Players.Num() > 0)
+	//		{
+	//			GetWorldTimerManager().SetTimer(LobbyClockTimer, this, &AMastraGameMode::StartLobbyClock, 1.0f, true, 1.0f);
+	//			//UpdateLobby();
+	//		}
+	//	}
+	//}
 }
 
-void AMastraGameMode::SpawnBasedOnTeam(FName TeamName, USkeletalMesh* CharMesh)
+void AMastraGameMode::SpawnBasedOnTeam(FName TeamName)//(FName TeamName, USkeletalMesh* CharMesh)
 {
 	AMastraPlayerState* PS = Cast <AMastraPlayerState>(newPlayer->PlayerState);
 	if (PS)
@@ -136,30 +162,31 @@ void AMastraGameMode::SpawnBasedOnTeam(FName TeamName, USkeletalMesh* CharMesh)
 			Team = TeamName;
 			//PS->CharMesh = CharMesh;
 
-			AActor* PStart = FindPlayerStart(newPlayer, FString::FromInt(PS->Pi));
+			//AActor* PStart = FindPlayerStart(newPlayer, FString::FromInt(PS->Pi));
+			//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, FString::Printf(TEXT("Player Index : %d"), PS->Pi));
 
 			//destroys existing pawn before spawning a new one
-			if (newPlayer->GetPawn() != nullptr)
-			{
-				newPlayer->GetPawn()->Destroy();
-			}
+			//if (newPlayer->GetPawn() != nullptr)
+			//{
+			//	newPlayer->GetPawn()->Destroy();
+			//}
 
-			AMastraCharacter* pawn = GetWorld()->SpawnActorDeferred<AMastraCharacter>(SpawnedActor, PStart->GetActorTransform(), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
-			if (pawn)
-			{
-				//pawn->PlayerName = PS->GetPlayerName();
-				//pawn->TeamName = PS->TeamName;
-				PS->Team = Team.ToString();
-				//pawn->CharMesh = PS->CharMesh;
-				PS->SpawnTransform = PStart->GetActorTransform();
-				UGameplayStatics::FinishSpawningActor(pawn, FTransform(PStart->GetActorRotation(), PStart->GetActorLocation()));
+			//AMastraCharacter* pawn = GetWorld()->SpawnActorDeferred<AMastraCharacter>(SpawnedActor, PStart->GetActorTransform(), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+			//if (pawn)
+			//{
+			//	//pawn->PlayerName = PS->GetPlayerName();
+			//	//pawn->TeamName = PS->TeamName;
+			//	PS->Team = Team.ToString();
+			//	//pawn->CharMesh = PS->CharMesh;
+			//	PS->SpawnTransform = PStart->GetActorTransform();
+			//	UGameplayStatics::FinishSpawningActor(pawn, FTransform(PStart->GetActorRotation(), PStart->GetActorLocation()));
 
-				newPlayer->Possess(pawn);
-				newPlayer->ClientSetRotation(PStart->GetActorRotation());
+			//	newPlayer->Possess(pawn);
+			//	newPlayer->ClientSetRotation(PStart->GetActorRotation());
 
-				/*newPlayer->bShowMouseCursor = true;
-				newPlayer->SetInputMode(FInputModeGameAndUI());*/
-			}
+			//	/*newPlayer->bShowMouseCursor = true;
+			//	newPlayer->SetInputMode(FInputModeGameAndUI());*/
+			//}
 		}
 	}
 }
