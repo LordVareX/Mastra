@@ -65,15 +65,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Spectator")
 		int32 currentPlayer;
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Spectator")
-	//	AMastraPlayerController* CurrSpectator;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Spectator")
+		AMastraPlayerController* CurrSpectator;
 
 	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "ID")
 		int32 pi;
 
 	//RequestRespawn
-	//UFUNCTION(Reliable, Server, WithValidation, Category = "Respawn")
-	//	void RespawnPawn(FTransform SpawnTransform);
+	UFUNCTION(Reliable, Server, WithValidation, Category = "Respawn")
+		void RespawnPawn(FTransform SpawnTransform);
 
 	//UFUNCTION(BlueprintImplementableEvent, Category = "Players")
 	//	void NameChangeRequest(const FString& PlayerName, int32 PIndex);
@@ -125,8 +125,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadWrite, Category = "SpectID")
 		int32 SpectPI;
 
-	//UFUNCTION(BlueprintPure, Category = "Increment")
-	//	static int32 CheckIndexValidity(int32 index, TArray<AMastraPlayerController*> PlayerList, EFormula SwitchMode);
+	UFUNCTION(BlueprintPure, Category = "Increment")
+		static int32 CheckIndexValidity(int32 index, TArray<AMastraPlayerController*> PlayerList, EFormula SwitchMode);
 
 	//UFUNCTION(BlueprintCallable, Reliable, Client, WithValidation, Category = "InputMode")
 	//	void ClientSetInputMode();
@@ -136,8 +136,8 @@ protected:
 	//	void SetupSpectator(EFormula SwitchMode);
 
 	//SpectatorMode
-	//UFUNCTION(Reliable, Server, WithValidation, Category = "Spectator")
-	//	void SpectateNextPlayer(const TArray<AMastraPlayerController*>& PlayerList, EFormula SwitchMode);
+	UFUNCTION(Reliable, Server, WithValidation, Category = "Spectator")
+		void SpectateNextPlayer(const TArray<AMastraPlayerController*>& PlayerList, EFormula SwitchMode);
 
 //private:
 	//bool bInputPressed; // Input is bring pressed

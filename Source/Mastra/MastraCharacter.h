@@ -112,6 +112,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Game Instance")
 		UMastraGameInstance* GI;
 
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite)
+		FTransform SpawnTransform;
+
 	
 
 private:
@@ -159,6 +162,12 @@ protected:
 	UFUNCTION()
 		void RegenHP();
 
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
+		void RespawnCharacter();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void RespawnUpdate();
+
 	UFUNCTION(BlueprintImplementableEvent)
 		void UpdateStats(float currMaxHealth, int32 currLevel);
 
@@ -171,6 +180,9 @@ public:
 
 	UPROPERTY()
 		FTimerHandle HPRegenHandle;
+
+	UPROPERTY()
+		FTimerHandle RespawnHandle;
 
 
 

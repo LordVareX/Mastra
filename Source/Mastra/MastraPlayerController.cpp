@@ -227,33 +227,33 @@ void AMastraPlayerController::SetupInputComponent()
 //	}
 //}
 //
-//int32 AMastraPlayerController::CheckIndexValidity(int32 index, TArray<AMastraPlayerController*> PlayerList, EFormula SwitchMode)
-//{
-//	if (SwitchMode == EFormula::Addition)
-//	{
-//		//select the index number forward
-//		int32 temp = index + 1;
-//		if (PlayerList.Num() == temp)
-//		{
-//			return 0;
-//		}
-//		else
-//			return temp;
-//	}
-//	else
-//	{
-//		//select the index number backwards
-//		int32 temp = index - 1;
-//		if (temp == -1)
-//		{
-//			return PlayerList.Num() - 1;
-//		}
-//		else
-//			return temp;
-//	}
-//
-//
-//}
+int32 AMastraPlayerController::CheckIndexValidity(int32 index, TArray<AMastraPlayerController*> PlayerList, EFormula SwitchMode)
+{
+	if (SwitchMode == EFormula::Addition)
+	{
+		//select the index number forward
+		int32 temp = index + 1;
+		if (PlayerList.Num() == temp)
+		{
+			return 0;
+		}
+		else
+			return temp;
+	}
+	else
+	{
+		//select the index number backwards
+		int32 temp = index - 1;
+		if (temp == -1)
+		{
+			return PlayerList.Num() - 1;
+		}
+		else
+			return temp;
+	}
+
+
+}
 //
 //bool AMastraPlayerController::ClientSetInputMode_Validate()
 //{
@@ -269,65 +269,65 @@ void AMastraPlayerController::SetupInputComponent()
 //	}
 //}
 //
-//bool AMastraPlayerController::SpectateNextPlayer_Validate(const TArray<AMastraPlayerController*>& PlayerList, EFormula SwitchMode)
-//{
-//	return true;
-//}
-//
-//void AMastraPlayerController::SpectateNextPlayer_Implementation(const TArray<AMastraPlayerController*>& PlayerList, EFormula SwitchMode)
-//{
-//
-//	bool x = false;
-//	int32 count = 0;
-//
-//	//get playerstate
-//	AMastraPlayerState* thisps = Cast<AMastraPlayerState>(this->PlayerState);
-//
-//	for (int32 i = 0; i < PlayerList.Num(); i++)
-//	{
-//		if (PlayerList[i]->GetPawn() != nullptr)
-//		{
-//			AMastraPlayerState* ps = Cast<AMastraPlayerState>(PlayerList[i]->PlayerState);
-//			if (ps->TeamName == thisps->TeamName)
-//			{
-//				count += 1;
-//				if (count > 0)
-//				{
-//					x = true;
-//					break;
-//				}
-//			}
-//		}
-//	}
-//
-//	//Is eligible to spectate??
-//	if (x == true)
-//	{
-//	loop:
-//		currentPlayer = CheckIndexValidity(currentPlayer, PlayerList, SwitchMode); //check if next spectated player is exist in an array
-//
-//		if (PlayerList[currentPlayer]->GetPawn() != nullptr) //checks if player does have a pawn
-//		{
-//			if (PlayerList[currentPlayer]->GetPawn() != this->GetPawn()) //checks if spectated pawn is not current owning pawn
-//			{
-//				AMastraPlayerState* ps = Cast<AMastraPlayerState>(PlayerList[currentPlayer]->PlayerState);
-//				if (ps->TeamName == thisps->TeamName) //spectating only team pawn
-//				{
-//					this->SetViewTargetWithBlend(PlayerList[currentPlayer], 0.0f, EViewTargetBlendFunction::VTBlend_Linear, 0.0f, false);
-//					CurrSpectator = PlayerList[currentPlayer];//set new spectated player
-//					CurrSpectator->SpectPI = this->pi;
-//					return;
-//				}
-//				else
-//					goto loop;
-//			}
-//			else
-//				goto loop;
-//		}
-//		else
-//			goto loop;
-//	}
-//}
+bool AMastraPlayerController::SpectateNextPlayer_Validate(const TArray<AMastraPlayerController*>& PlayerList, EFormula SwitchMode)
+{
+	return true;
+}
+
+void AMastraPlayerController::SpectateNextPlayer_Implementation(const TArray<AMastraPlayerController*>& PlayerList, EFormula SwitchMode)
+{
+
+	bool x = false;
+	int32 count = 0;
+
+	//get playerstate
+	AMastraPlayerState* thisps = Cast<AMastraPlayerState>(this->PlayerState);
+
+	for (int32 i = 0; i < PlayerList.Num(); i++)
+	{
+		if (PlayerList[i]->GetPawn() != nullptr)
+		{
+			AMastraPlayerState* ps = Cast<AMastraPlayerState>(PlayerList[i]->PlayerState);
+			if (ps->TeamName == thisps->TeamName)
+			{
+				count += 1;
+				if (count > 0)
+				{
+					x = true;
+					break;
+				}
+			}
+		}
+	}
+
+	//Is eligible to spectate??
+	if (x == true)
+	{
+	loop:
+		currentPlayer = CheckIndexValidity(currentPlayer, PlayerList, SwitchMode); //check if next spectated player is exist in an array
+
+		if (PlayerList[currentPlayer]->GetPawn() != nullptr) //checks if player does have a pawn
+		{
+			if (PlayerList[currentPlayer]->GetPawn() != this->GetPawn()) //checks if spectated pawn is not current owning pawn
+			{
+				AMastraPlayerState* ps = Cast<AMastraPlayerState>(PlayerList[currentPlayer]->PlayerState);
+				if (ps->TeamName == thisps->TeamName) //spectating only team pawn
+				{
+					this->SetViewTargetWithBlend(PlayerList[currentPlayer], 0.0f, EViewTargetBlendFunction::VTBlend_Linear, 0.0f, false);
+					CurrSpectator = PlayerList[currentPlayer];//set new spectated player
+					CurrSpectator->SpectPI = this->pi;
+					return;
+				}
+				else
+					goto loop;
+			}
+			else
+				goto loop;
+		}
+		else
+			goto loop;
+	}
+}
 //
 //bool AMastraPlayerController::SetupSpectator_Validate(EFormula SwitchMode)
 //{
@@ -346,67 +346,67 @@ void AMastraPlayerController::SetupInputComponent()
 //	}
 //}
 //
-//bool AMastraPlayerController::RespawnPawn_Validate(FTransform SpawnTransform)
-//{
-//	return true;
-//}
-//
-//void AMastraPlayerController::RespawnPawn_Implementation(FTransform SpawnTransform)
-//{
-//	GM = Cast<AMastraGameMode>(GetWorld()->GetAuthGameMode());
-//	if (GM)
-//	{
-//		//Destroy pawn before respawning
-//		if (this->GetPawn())
-//		{
-//			this->GetPawn()->Destroy();
-//		}
-//
-//		FTimerHandle handle;
-//		FTimerDelegate TimerDelegate;
-//
-//		//set view target
-//		TimerDelegate.BindLambda([this]()
-//		{
-//			//Assigned initial spectator player before swapping to active pawn player to spectate
-//			currentPlayer = GM->Players.Find(this);
-//			CurrSpectator = GM->Players[currentPlayer];
-//			CurrSpectator->SpectPI = this->pi;
-//
-//			this->SpectateNextPlayer(GM->Players, EFormula::Addition);
-//
-//			//Setup spectator controller that currently spectating this player to switch to another player
-//			AMastraPlayerController* newPC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), CurrSpectator->SpectPI));
-//			if (newPC)
-//			{
-//				if (newPC->GetPawn() == nullptr)
-//				{
-//					newPC->currentPlayer = GM->Players.Find(newPC);
-//					newPC->CurrSpectator = GM->Players[currentPlayer];
-//					newPC->CurrSpectator->SpectPI = newPC->pi;
-//
-//					newPC->SpectateNextPlayer(GM->Players, EFormula::Addition);
-//				}
-//			}
-//
-//		});
-//		this->GetWorldTimerManager().SetTimer(handle, TimerDelegate, 0.02f, false);
-//
-//		//get current controller playerstate
-//		AMastraPlayerState* thisstate = Cast<AMastraPlayerState>(this->PlayerState);
-//
-//		float temp = thisstate->InitRespawnTime - 3.0f;
-//
-//		//Delay before respawning a new pawn
-//		FTimerHandle handle1;
-//		FTimerDelegate TimerDelegate1;
-//
-//		//Possess a pawn
-//		TimerDelegate1.BindLambda([this, thisstate]()
-//		{
-//			PlayerCameraManager->BlendTimeToGo = 0.0f;
-//			GM->RespawnRequested(this, thisstate->SpawnTransform);
-//		});
-//		this->GetWorldTimerManager().SetTimer(handle1, TimerDelegate1, temp, false);
-//	}
-//}
+bool AMastraPlayerController::RespawnPawn_Validate(FTransform SpawnTransform)
+{
+	return true;
+}
+
+void AMastraPlayerController::RespawnPawn_Implementation(FTransform SpawnTransform)
+{
+	GM = Cast<AMastraGameMode>(GetWorld()->GetAuthGameMode());
+	if (GM)
+	{
+		//Destroy pawn before respawning
+		//if (this->GetPawn())
+		//{
+		//	this->GetPawn()->Destroy();
+		//}
+
+		//FTimerHandle handle;
+		//FTimerDelegate TimerDelegate;
+
+		////set view target
+		//TimerDelegate.BindLambda([this]()
+		//{
+		//	//Assigned initial spectator player before swapping to active pawn player to spectate
+		//	currentPlayer = GM->Players.Find(this);
+		//	CurrSpectator = GM->Players[currentPlayer];
+		//	CurrSpectator->SpectPI = this->pi;
+
+		//	this->SpectateNextPlayer(GM->Players, EFormula::Addition);
+
+		//	//Setup spectator controller that currently spectating this player to switch to another player
+		//	AMastraPlayerController* newPC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), CurrSpectator->SpectPI));
+		//	if (newPC)
+		//	{
+		//		if (newPC->GetPawn() == nullptr)
+		//		{
+		//			newPC->currentPlayer = GM->Players.Find(newPC);
+		//			newPC->CurrSpectator = GM->Players[currentPlayer];
+		//			newPC->CurrSpectator->SpectPI = newPC->pi;
+
+		//			newPC->SpectateNextPlayer(GM->Players, EFormula::Addition);
+		//		}
+		//	}
+
+		//});
+		//this->GetWorldTimerManager().SetTimer(handle, TimerDelegate, 0.02f, false);
+
+		//get current controller playerstate
+		AMastraPlayerState* thisstate = Cast<AMastraPlayerState>(this->PlayerState);
+
+		float temp = thisstate->InitRespawnTime - 3.0f;
+
+		//Delay before respawning a new pawn
+		FTimerHandle handle1;
+		FTimerDelegate TimerDelegate1;
+
+		//Possess a pawn
+		TimerDelegate1.BindLambda([this, thisstate]()
+		{
+			PlayerCameraManager->BlendTimeToGo = 0.0f;
+			GM->RespawnRequested(this, thisstate->SpawnTransform);
+		});
+		this->GetWorldTimerManager().SetTimer(handle1, TimerDelegate1, temp, false);
+	}
+}
