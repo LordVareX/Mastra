@@ -257,39 +257,40 @@ void AMastraGameMode::RespawnRequested_Implementation(APlayerController* playerC
 		if (HasAuthority())
 		{
 			//destroys existing pawn before spawning a new one
-			if (playerController->GetPawn() != nullptr)
+			/*if (playerController->GetPawn() != nullptr)
 			{
 				playerController->GetPawn()->Destroy();
-			}
+			}*/
 			AMastraPlayerState* PS = Cast<AMastraPlayerState>(playerController->PlayerState);
 			{
+				playerController->ClientSetLocation(SpawnTransform.GetLocation(), SpawnTransform.Rotator());
 				//Spawn actor
-				if (SpawnedActor)
-				{
-					//Spawn actor from SpawnedActor subclass
-					AMastraCharacter* pawn = GetWorld()->SpawnActorDeferred<AMastraCharacter>(SpawnedActor, SpawnTransform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
-					if (pawn)
-					{
-						//Assign team and player name before finish spawning
-						//pawn->PlayerName = PS->Username;
-						//pawn->TeamName = PS->TeamName;
-						//pawn->CharMesh = PS->CharMesh;
-
-						UGameplayStatics::FinishSpawningActor(pawn, FTransform(SpawnTransform.Rotator(), SpawnTransform.GetLocation()));
-					}
-
-					//possess and set new rotation for newly spawned pawn
-					playerController->Possess(pawn);
-					playerController->ClientSetRotation(pawn->GetActorRotation());
-
-					AMastraPlayerController* pc = Cast<AMastraPlayerController>(playerController);
-					if (pc)
-					{
-//						pc->SetupPawnAttribute();
-					}
-					/*playerController->bShowMouseCursor = false;
-					playerController->GetPawn()->EnableInput(playerController);*/
-				}
+//				if (SpawnedActor)
+//				{
+//					//Spawn actor from SpawnedActor subclass
+//					AMastraCharacter* pawn = GetWorld()->SpawnActorDeferred<AMastraCharacter>(SpawnedActor, SpawnTransform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+//					if (pawn)
+//					{
+//						//Assign team and player name before finish spawning
+//						//pawn->PlayerName = PS->Username;
+//						pawn->Team = FCString::Atoi(*PS->TeamName.ToString());
+//						//pawn->CharMesh = PS->CharMesh;
+//
+//						UGameplayStatics::FinishSpawningActor(pawn, FTransform(SpawnTransform.Rotator(), SpawnTransform.GetLocation()));
+//					}
+//
+//					//possess and set new rotation for newly spawned pawn
+//					playerController->Possess(pawn);
+//					playerController->ClientSetRotation(pawn->GetActorRotation());
+//
+//					AMastraPlayerController* pc = Cast<AMastraPlayerController>(playerController);
+//					if (pc)
+//					{
+////						pc->SetupPawnAttribute();
+//					}
+//					/*playerController->bShowMouseCursor = false;
+//					playerController->GetPawn()->EnableInput(playerController);*/
+//				}
 			}
 		}
 	}

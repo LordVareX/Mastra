@@ -66,6 +66,7 @@ void AMastraCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AMastraCharacter, AttackSpeedRatio);
 	DOREPLIFETIME(AMastraCharacter, MovementSpeed);
 	DOREPLIFETIME(AMastraCharacter, RespawnTime);
+	DOREPLIFETIME(AMastraCharacter, SpawnTransform);
 }
 
 AMastraCharacter::AMastraCharacter()
@@ -111,7 +112,6 @@ void AMastraCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
 	//RefreshPlayerData();
 	//ServerSetupDetails();
 	//UpdateUI(Health, MaxHealth, Level);
@@ -137,15 +137,50 @@ float AMastraCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent
 	{
 		if (DamageCauser != this)
 		{
-			Health = Health - Damage;
-			//UpdateUI(Health);
-			if (Health <= 0)
+			AMastraPlayerState* PS = Cast<AMastraPlayerState>(GetPlayerState());
+			if (PS)
 			{
-				this->Destroy();
+				Health = Health - Damage;
+				//UpdateUI(Health);
+				if (Health <= 0)
+				{
+					GetWorldTimerManager().ClearTimer(HPRegenHandle);
+					PS->StartRespawnTimer(PS);
+					//this->Destroy();
+					//this->DisableInput(UGameplayStatics::GetPlayerController(this, 0));
+					GetWorldTimerManager().SetTimer(RespawnHandle, this, &AMastraCharacter::RespawnCharacter, 0.1f, false);
+					GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, FString::Printf(TEXT("Respawn")));
+
+				}
 			}
 		}
 	}
 	return Health;
+}
+
+bool AMastraCharacter::RespawnCharacter_Validate()
+{
+	return true;
+}
+
+void AMastraCharacter::RespawnCharacter_Implementation()
+{
+	AMastraPlayerController* PC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PC)
+	{
+		//Set current input to interact with UI in spectator mode
+		if (PC->IsLocalPlayerController() && PC->GetNetMode() != ENetMode::NM_DedicatedServer)
+		{
+			PC->bShowMouseCursor = true;
+			PC->SetInputMode(FInputModeGameAndUI());
+		}
+		AMastraPlayerState* PS = Cast<AMastraPlayerState>(PC->PlayerState);
+		if (PS)
+		{
+			PC->RespawnPawn(PS->SpawnTransform);
+			PC->UnPossess();
+		}
+	}
 }
 
 void AMastraCharacter::RefreshPlayerData()
@@ -174,6 +209,7 @@ bool AMastraCharacter::Locked_Validate(const FString& CharacterName)
 
 void AMastraCharacter::Locked_Implementation(const FString& CharacterName)
 {
+	
 	ServerSetupDetails(CharacterName);
 	PickedCharacter = CharacterName;
 	//UpdateUI(Health, MaxHealth, Level);
@@ -263,7 +299,7 @@ void AMastraCharacter::SetupStats_Implementation(const FString& CharacterName)
 					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
 					
 					//RegenHP();
-					UpdateUI(Health);
+					OnRep_HealthUpdated();
 					//RegenHealth(MaxHealth);
 					UpdateStats(MaxHealth, Level);
 
