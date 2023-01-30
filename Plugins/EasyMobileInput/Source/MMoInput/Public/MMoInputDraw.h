@@ -25,7 +25,7 @@ public:
 	* OutResultWorld: World position of the center of the effective range
 	*/
 	UFUNCTION(BlueprintCallable, Category = "MMo Input")
-	UPARAM(DisplayName = "Ok") bool DrawRange(UPARAM(DisplayName = "FollowedTarget") AActor* InActor, UPARAM(DisplayName = "ScreenPosition") const FVector2D& LocalOffset, UPARAM(DisplayName = "ScreenRadiusOfJoystick") float WidgetRadius, UPARAM(DisplayName = "WorldRadiusOfRangeOut") float RangeOutRadius, UPARAM(DisplayName = "WorldRadiusOfRangeIn") float RangeInRadius, UPARAM(DisplayName = "RangeIn") UMaterial* InRangeIn, UPARAM(DisplayName = "RangeOut") UMaterial* InRangeOut, UPARAM(DisplayName = "WorldPosition") FVector& OutResultWorld);
+	UPARAM(DisplayName = "Ok") bool DrawRange(UPARAM(DisplayName = "FollowedTarget") AActor* InActor, UPARAM(DisplayName = "ScreenPosition") const FVector2D& LocalOffset, UPARAM(DisplayName = "ScreenRadiusOfJoystick") float WidgetRadius, UPARAM(DisplayName = "WorldRadiusOfRangeOut") float RangeOutRadius, UPARAM(DisplayName = "WorldRadiusOfRangeIn") float RangeInRadius, UPARAM(DisplayName = "RangeIn") UMaterial* InRangeIn, UPARAM(DisplayName = "RangeOut") UMaterial* InRangeOut, UPARAM(DisplayName = "WorldPosition") FVector& OutResultWorld, float BasedOnTeam);
 
 	UFUNCTION(BlueprintCallable, Category = "MMo Input")
 	void CleanRange();
@@ -42,7 +42,7 @@ public:
 	* OutResultWorld: World position of the center of the effective range
 	*/
 	UFUNCTION(BlueprintCallable, Category = "MMo Input")
-	UPARAM(DisplayName = "Ok") bool DrawArrow(UPARAM(DisplayName = "FollowedTarget") AActor* InActor, UPARAM(DisplayName = "ScreenPosition") const FVector2D& LocalOffset, UPARAM(DisplayName = "WorldRadiusOfArrow") float Radius, UPARAM(DisplayName = "Arrow") UMaterial* InArrow, UPARAM(DisplayName = "RangeOut")  UMaterial* InRangeOut, float FixedArrowSize, UPARAM(DisplayName = "WorldPosition") FVector& OutResultWorld);
+	UPARAM(DisplayName = "Ok") bool DrawArrow(UPARAM(DisplayName = "FollowedTarget") AActor* InActor, UPARAM(DisplayName = "ScreenPosition") const FVector2D& LocalOffset, UPARAM(DisplayName = "WorldRadiusOfArrow") float Radius, UPARAM(DisplayName = "Arrow") UMaterial* InArrow, UPARAM(DisplayName = "RangeOut")  UMaterial* InRangeOut, float FixedArrowSize, UPARAM(DisplayName = "WorldPosition") FVector& OutResultWorld, float BasedOnTeam);
 
 	UFUNCTION(BlueprintCallable, Category = "MMo Input")
 	void CleanArrow();

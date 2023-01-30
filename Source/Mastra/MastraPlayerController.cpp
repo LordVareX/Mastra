@@ -357,40 +357,40 @@ void AMastraPlayerController::RespawnPawn_Implementation(FTransform SpawnTransfo
 	if (GM)
 	{
 		//Destroy pawn before respawning
-		//if (this->GetPawn())
-		//{
-		//	this->GetPawn()->Destroy();
-		//}
+		if (this->GetPawn())
+		{
+			this->GetPawn()->Destroy();
+		}
 
-		//FTimerHandle handle;
-		//FTimerDelegate TimerDelegate;
+		FTimerHandle handle;
+		FTimerDelegate TimerDelegate;
 
-		////set view target
-		//TimerDelegate.BindLambda([this]()
-		//{
-		//	//Assigned initial spectator player before swapping to active pawn player to spectate
-		//	currentPlayer = GM->Players.Find(this);
-		//	CurrSpectator = GM->Players[currentPlayer];
-		//	CurrSpectator->SpectPI = this->pi;
+		//set view target
+		TimerDelegate.BindLambda([this]()
+		{
+			//Assigned initial spectator player before swapping to active pawn player to spectate
+			currentPlayer = GM->Players.Find(this);
+			CurrSpectator = GM->Players[currentPlayer];
+			CurrSpectator->SpectPI = this->pi;
 
-		//	this->SpectateNextPlayer(GM->Players, EFormula::Addition);
+			this->SpectateNextPlayer(GM->Players, EFormula::Addition);
 
-		//	//Setup spectator controller that currently spectating this player to switch to another player
-		//	AMastraPlayerController* newPC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), CurrSpectator->SpectPI));
-		//	if (newPC)
-		//	{
-		//		if (newPC->GetPawn() == nullptr)
-		//		{
-		//			newPC->currentPlayer = GM->Players.Find(newPC);
-		//			newPC->CurrSpectator = GM->Players[currentPlayer];
-		//			newPC->CurrSpectator->SpectPI = newPC->pi;
+			//Setup spectator controller that currently spectating this player to switch to another player
+			AMastraPlayerController* newPC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), CurrSpectator->SpectPI));
+			if (newPC)
+			{
+				if (newPC->GetPawn() == nullptr)
+				{
+					newPC->currentPlayer = GM->Players.Find(newPC);
+					newPC->CurrSpectator = GM->Players[currentPlayer];
+					newPC->CurrSpectator->SpectPI = newPC->pi;
 
-		//			newPC->SpectateNextPlayer(GM->Players, EFormula::Addition);
-		//		}
-		//	}
+					newPC->SpectateNextPlayer(GM->Players, EFormula::Addition);
+				}
+			}
 
-		//});
-		//this->GetWorldTimerManager().SetTimer(handle, TimerDelegate, 0.02f, false);
+		});
+		this->GetWorldTimerManager().SetTimer(handle, TimerDelegate, 0.02f, false);
 
 		//get current controller playerstate
 		AMastraPlayerState* thisstate = Cast<AMastraPlayerState>(this->PlayerState);
