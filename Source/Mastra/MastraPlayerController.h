@@ -78,8 +78,8 @@ public:
 	//UFUNCTION(BlueprintImplementableEvent, Category = "Players")
 	//	void NameChangeRequest(const FString& PlayerName, int32 PIndex);
 
-	//UFUNCTION(Reliable, Client, WithValidation, Category = "Respawn")
-	//	void SetupPawnAttribute();
+	UFUNCTION(Reliable, Client, WithValidation, Category = "Respawn")
+		void SetupPawnAttribute();
 
 	//Widget holder
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD", Meta = (ExposeOnSpawn = "true"))

@@ -176,21 +176,21 @@ void AMastraPlayerController::SetupInputComponent()
 //
 //}
 //
-//bool AMastraPlayerController::SetupPawnAttribute_Validate()
-//{
-//	return true;
-//}
-//
-//void AMastraPlayerController::SetupPawnAttribute_Implementation()
-//{
-//	AMastraCharacter* pawn = Cast<AMastraCharacter>(GetPawn());
-//	if (pawn)
-//	{
-//		/*pawn->MainWidget = MainWidget;*/
-//		pawn->EnableInput(this);
-//		pawn->RefreshPlayerData();
-//	}
-//}
+bool AMastraPlayerController::SetupPawnAttribute_Validate()
+{
+	return true;
+}
+
+void AMastraPlayerController::SetupPawnAttribute_Implementation()
+{
+	AMastraCharacter* pawn = Cast<AMastraCharacter>(GetPawn());
+	if (pawn)
+	{
+		/*pawn->MainWidget = MainWidget;*/
+		pawn->EnableInput(this);
+		pawn->RefreshPlayerData();
+	}
+}
 //
 //void AMastraPlayerController::Action()
 //{
@@ -356,57 +356,60 @@ void AMastraPlayerController::RespawnPawn_Implementation(FTransform SpawnTransfo
 	GM = Cast<AMastraGameMode>(GetWorld()->GetAuthGameMode());
 	if (GM)
 	{
-		//Destroy pawn before respawning
-		if (this->GetPawn())
-		{
-			this->GetPawn()->Destroy();
-		}
+		////Destroy pawn before respawning
+		//if (this->GetPawn())
+		//{
+		//	this->GetPawn()->Destroy();
+		//}
 
-		FTimerHandle handle;
-		FTimerDelegate TimerDelegate;
+		//FTimerHandle handle;
+		//FTimerDelegate TimerDelegate;
 
-		//set view target
-		TimerDelegate.BindLambda([this]()
-		{
-			//Assigned initial spectator player before swapping to active pawn player to spectate
-			currentPlayer = GM->Players.Find(this);
-			CurrSpectator = GM->Players[currentPlayer];
-			CurrSpectator->SpectPI = this->pi;
+		////set view target
+		//TimerDelegate.BindLambda([this]()
+		//{
+		//	//Assigned initial spectator player before swapping to active pawn player to spectate
+		//	currentPlayer = GM->Players.Find(this);
+		//	CurrSpectator = GM->Players[currentPlayer];
+		//	CurrSpectator->SpectPI = this->pi;
 
-			this->SpectateNextPlayer(GM->Players, EFormula::Addition);
+		//	this->SpectateNextPlayer(GM->Players, EFormula::Addition);
 
-			//Setup spectator controller that currently spectating this player to switch to another player
-			AMastraPlayerController* newPC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), CurrSpectator->SpectPI));
-			if (newPC)
-			{
-				if (newPC->GetPawn() == nullptr)
-				{
-					newPC->currentPlayer = GM->Players.Find(newPC);
-					newPC->CurrSpectator = GM->Players[currentPlayer];
-					newPC->CurrSpectator->SpectPI = newPC->pi;
+		//	//Setup spectator controller that currently spectating this player to switch to another player
+		//	AMastraPlayerController* newPC = Cast<AMastraPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), CurrSpectator->SpectPI));
+		//	if (newPC)
+		//	{
+		//		if (newPC->GetPawn() == nullptr)
+		//		{
+		//			newPC->currentPlayer = GM->Players.Find(newPC);
+		//			newPC->CurrSpectator = GM->Players[currentPlayer];
+		//			newPC->CurrSpectator->SpectPI = newPC->pi;
 
-					newPC->SpectateNextPlayer(GM->Players, EFormula::Addition);
-				}
-			}
+		//			newPC->SpectateNextPlayer(GM->Players, EFormula::Addition);
+		//		}
+		//	}
 
-		});
-		this->GetWorldTimerManager().SetTimer(handle, TimerDelegate, 0.02f, false);
+		//});
+		//this->GetWorldTimerManager().SetTimer(handle, TimerDelegate, 0.02f, false);
 
-		//get current controller playerstate
+		////get current controller playerstate
 		AMastraPlayerState* thisstate = Cast<AMastraPlayerState>(this->PlayerState);
 
-		float temp = thisstate->InitRespawnTime - 3.0f;
+		//float temp = thisstate->InitRespawnTime - 3.0f;
 
-		//Delay before respawning a new pawn
-		FTimerHandle handle1;
-		FTimerDelegate TimerDelegate1;
+		////Delay before respawning a new pawn
+		//FTimerHandle handle1;
+		//FTimerDelegate TimerDelegate1;
 
-		//Possess a pawn
-		TimerDelegate1.BindLambda([this, thisstate]()
+		////Possess a pawn
+		//TimerDelegate1.BindLambda([this, thisstate]()
+		//{
+		//	PlayerCameraManager->BlendTimeToGo = 0.0f;
+		if (thisstate)
 		{
-			PlayerCameraManager->BlendTimeToGo = 0.0f;
 			GM->RespawnRequested(this, thisstate->SpawnTransform);
-		});
-		this->GetWorldTimerManager().SetTimer(handle1, TimerDelegate1, temp, false);
+		}
+		/*});
+		this->GetWorldTimerManager().SetTimer(handle1, TimerDelegate1, temp, false);*/
 	}
 }

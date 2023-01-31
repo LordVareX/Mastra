@@ -67,6 +67,8 @@ void AMastraCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AMastraCharacter, MovementSpeed);
 	DOREPLIFETIME(AMastraCharacter, RespawnTime);
 	DOREPLIFETIME(AMastraCharacter, SpawnTransform);
+	DOREPLIFETIME(AMastraCharacter, CMesh);
+
 }
 
 AMastraCharacter::AMastraCharacter()
@@ -112,6 +114,7 @@ void AMastraCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SpawnTransform = GetActorTransform();
 	//RefreshPlayerData();
 	//ServerSetupDetails();
 	//UpdateUI(Health, MaxHealth, Level);
@@ -145,12 +148,12 @@ float AMastraCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent
 				if (Health <= 0)
 				{
 					GetWorldTimerManager().ClearTimer(HPRegenHandle);
-					PS->StartRespawnTimer(PS);
+					//PS->StartRespawnTimer(PS);
 					//this->Destroy();
 					//this->DisableInput(UGameplayStatics::GetPlayerController(this, 0));
-					GetWorldTimerManager().SetTimer(RespawnHandle, this, &AMastraCharacter::RespawnCharacter, 0.1f, false);
-					GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, FString::Printf(TEXT("Respawn")));
-
+					//GetWorldTimerManager().SetTimer(RespawnHandle, this, &AMastraCharacter::RespawnCharacter, 5.0f, false);
+					//GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, FString::Printf(TEXT("Respawn")));
+					RespawnUpdate();
 				}
 			}
 		}
@@ -169,11 +172,11 @@ void AMastraCharacter::RespawnCharacter_Implementation()
 	if (PC)
 	{
 		//Set current input to interact with UI in spectator mode
-		if (PC->IsLocalPlayerController() && PC->GetNetMode() != ENetMode::NM_DedicatedServer)
+		/*if (PC->IsLocalPlayerController() && PC->GetNetMode() != ENetMode::NM_DedicatedServer)
 		{
 			PC->bShowMouseCursor = true;
 			PC->SetInputMode(FInputModeGameAndUI());
-		}
+		}*/
 		AMastraPlayerState* PS = Cast<AMastraPlayerState>(PC->PlayerState);
 		if (PS)
 		{
@@ -185,10 +188,11 @@ void AMastraCharacter::RespawnCharacter_Implementation()
 
 void AMastraCharacter::RefreshPlayerData()
 {
-	if (IsLocallyControlled())
-	{
-		//ServerSetupDetails();
-	}
+	//if (IsLocallyControlled())
+	//{
+		ServerSetupDetails("Ratna");
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("%s"), *PickedCharacter));
+	//}
 }
 
 bool AMastraCharacter::ServerLocked_Validate(const FString& CharacterName)
@@ -240,6 +244,8 @@ void AMastraCharacter::SetupDetails_Implementation(const FString& CharacterName)
 		FCharacterBase* OutRow = CharacterTable->FindRow<FCharacterBase>(FName(*CharacterName), "");//(FName(*GI->CharacterName), "");
 		if (OutRow)
 		{
+			CMesh = OutRow->Character_Details.Character_Mesh;
+			CAnimBP = OutRow->Character_Details.Character_AnimBP;
 			this->GetMesh()->SetSkeletalMesh(OutRow->Character_Details.Character_Mesh);
 			this->GetMesh()->SetAnimInstanceClass(OutRow->Character_Details.Character_AnimBP);
 			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, FString::Printf(TEXT("Assigned")));
@@ -297,6 +303,23 @@ void AMastraCharacter::SetupStats_Implementation(const FString& CharacterName)
 					AttackSpeed = OutRow->Character_Status[i].Attack_Speed;
 					AttackSpeedRatio = OutRow->Character_Status[i].Attack_Speed_Ratio;
 					MovementSpeed = OutRow->Character_Status[i].Movement_Speed;
+
+					PS->Health = Health;
+					PS->MaxHealth = MaxHealth;
+					PS->HPRegen = HPRegen;
+					PS->Mana = Mana;
+					PS->MaxMana = MaxMana;
+					PS->ManaRegen = ManaRegen;
+					PS->PhysicalAttack = PhysicalAttack;
+					PS->MagicPower = MagicPower;
+					PS->PhysicalDefense = PhysicalDefense;
+					PS->MagicDefense = MagicDefense;
+					PS->PhysicalPenetration = PhysicalPenetration;
+					PS->MagicalPenetration = MagicalPenetration;
+					PS->DamageReduction = DamageReduction;
+					PS->AttackSpeed = AttackSpeed;
+					PS->AttackSpeedRatio = AttackSpeedRatio;
+					PS->MovementSpeed = MovementSpeed;
 					
 					//RegenHP();
 					OnRep_HealthUpdated();

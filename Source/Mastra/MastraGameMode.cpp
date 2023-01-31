@@ -257,13 +257,13 @@ void AMastraGameMode::RespawnRequested_Implementation(APlayerController* playerC
 		if (HasAuthority())
 		{
 			//destroys existing pawn before spawning a new one
-			/*if (playerController->GetPawn() != nullptr)
+			if (playerController->GetPawn() != nullptr)
 			{
 				playerController->GetPawn()->Destroy();
-			}*/
+			}
 			AMastraPlayerState* PS = Cast<AMastraPlayerState>(playerController->PlayerState);
 			{
-				playerController->ClientSetLocation(SpawnTransform.GetLocation(), SpawnTransform.Rotator());
+				//playerController->ClientSetLocation(SpawnTransform.GetLocation(), SpawnTransform.Rotator());
 				//Spawn actor
 				if (SpawnedActor)
 				{
@@ -281,12 +281,12 @@ void AMastraGameMode::RespawnRequested_Implementation(APlayerController* playerC
 
 					//possess and set new rotation for newly spawned pawn
 					playerController->Possess(pawn);
-					playerController->ClientSetRotation(pawn->GetActorRotation());
+					//playerController->ClientSetRotation(pawn->GetActorRotation());
 
 					AMastraPlayerController* pc = Cast<AMastraPlayerController>(playerController);
 					if (pc)
 					{
-//						pc->SetupPawnAttribute();
+						pc->SetupPawnAttribute();
 					}
 					playerController->bShowMouseCursor = false;
 					playerController->GetPawn()->EnableInput(playerController);

@@ -115,6 +115,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite)
 		FTransform SpawnTransform;
 
+	UPROPERTY(EditDefaultsOnly, Replicated, BlueprintReadWrite)
+		USkeletalMesh* CMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		TSubclassOf<UObject> CAnimBP;
 	
 
 private:
